@@ -1,0 +1,6 @@
+id=oneui_stage_bypass
+name=OneUI Stage Bypass
+version=0.1.0
+versionCode=1
+author=EmilyTsum
+description=Remove selected SoundAlive, Dolby and AdaptSound stage assignments. Preserves other effects. Console only; tested on SM-S931Z, not all Galaxy devices.
