@@ -56,8 +56,13 @@ OLD=/data/adb/modules/s25_stock_fx_bypass
 if [ -d "$OLD" ] && [ ! -e "$OLD/disable" ] && [ ! -e "$OLD/remove" ]; then
  echo 'Disable and detach s25_stock_fx_bypass first'; exit 1
 fi
-# Refuse any existing mount at this file, even if its owner is unknown.
-if "$BB" awk -v p="$TARGET" '$5==p {found=1} END {exit !found}' /proc/self/mountinfo; then
+# Inspect the mount backing the opened file. Hidden mounts under a later
+# parent mount can retain the same pathname in mountinfo.
+exec 9< "$TARGET"
+mount_id=$("$BB" awk '$1=="mnt_id:" {print $2}' /proc/$$/fdinfo/9)
+exec 9<&-
+[ -n "$mount_id" ] || { echo 'Cannot identify active mount'; exit 1; }
+if "$BB" awk -v id="$mount_id" -v p="$TARGET" '$1==id && $5==p {found=1} END {exit !found}' /proc/self/mountinfo; then
  echo 'Another mount already covers the target'; exit 1
 fi
 TMP="$STATE/patched.new"

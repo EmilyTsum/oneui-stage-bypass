@@ -17,10 +17,12 @@ is not proof of speaker safety across devices.
   bypass (71 removed references).
 - Seven synthetic parser tests cover preservation, malformed syntax and
   idempotence. No proprietary configuration is distributed.
-- Full generic-module activation is **not validated**: the test phone had
-  overlapping legacy mounts and the module correctly refused activation.
-  Its previous device-specific module was restored. Boot lifecycle, other
-  devices, Magisk/APatch and audible behavior remain unverified.
+- Generic-module activation, OFF restoring the original file, ON restoring
+  the patched file, and repeated apply were validated on that phone.
+  Active mounts are identified by the opened file's mount ID; hidden legacy
+  mounts under an overmounted parent do not cause false conflicts.
+  Boot lifecycle, other devices, Magisk/APatch and new audible tests remain
+  unverified. The audio stack was not restarted during migration.
 - Requires a root manager with BusyBox at one of the paths in `control.sh`,
   `nsenter`, `chcon --reference`, and permission to bind mount in init's
   mount namespace. This module grants no SELinux permissions.
